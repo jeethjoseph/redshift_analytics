@@ -5,6 +5,8 @@ import time
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import slack
+
 
 ts = time.time()
 print(ts)
@@ -21,10 +23,6 @@ try:
 except:
     print("Something went wrong while trying to Read")
 
-print(os.environ['HOST'])
-print(os.environ['DATABASE'])
-print(os.environ['USER'])
-print(os.environ['PASSWORD'])
 
 
 count = 0
@@ -69,3 +67,9 @@ res = {key: skuCountPerManufacturer[key] - staleLocalData.get(key, 0)
 
 diff = {x:y for x,y in res.items() if (y is not None and y!=0) }
 print(diff)
+print_payload = "Counts of Active SKUs diffed per manufacturer" + "\n"
+for manufacturer in diff:
+    print_payload+=manufacturer + " : " + str(diff[manufacturer])+"\n"
+
+client = slack.WebClient(token=os.environ['SLACK_TOKEN'])
+client.chat_postMessage(channel='#sandbox',text=print_payload)
