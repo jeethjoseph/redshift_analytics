@@ -72,4 +72,4 @@ for manufacturer in diff:
     print_payload+=manufacturer + " : " + str(diff[manufacturer])+"\n"
 
 client = slack.WebClient(token=os.environ['SLACK_TOKEN'])
-client.chat_postMessage(channel='#sandbox',text=print_payload)
+client.chat_postMessage(channel='#coverage',text=print_payload)
