@@ -21,6 +21,10 @@ try:
 except:
     print("Something went wrong while trying to Read")
 
+print(os.environ['HOST'])
+print(os.environ['DATABASE'])
+print(os.environ['USER'])
+print(os.environ['PASSWORD'])
 
 
 count = 0
@@ -30,10 +34,10 @@ while (count < maxTries):
     try:
         print("reached try block")
         conn = redshift_connector.connect(
-            host='172.33.1.127',
-            database='dev',
-            user='products_coverage_user',
-            password='aE0kZ9pA9r')
+            host=os.environ['HOST'],
+            database=os.environ['DATABASE'],
+            user=os.environ['DBUSER'],
+            password=os.environ['PASSWORD'])
         # Create a Cursor object
         cursor = conn.cursor()
 
