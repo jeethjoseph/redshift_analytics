@@ -63,9 +63,25 @@ res = {key: skuCountPerManufacturer[key] - staleLocalData.get(key, 0)
                        for key in skuCountPerManufacturer.keys()}
 
 diff = {x:y for x,y in res.items() if (y is not None and y!=0) }
-print(diff)
-print_payload = "Counts of Active SKUs diffed per manufacturer" + "\n"
-for manufacturer in diff:
-    print_payload+=manufacturer + " : " + str(diff[manufacturer])+"\n"
+sorteddiff = {k: v for k, v in sorted(diff.items(), key=lambda x:x[1])} 
+print_payload = ""
+for manufacturer in sorteddiff:
+    print_payload+=manufacturer + " : " + str(sorteddiff[manufacturer])+"\n"
 
-client.chat_postMessage(channel='#coverage',text=print_payload)
+client.chat_postMessage(channel='#sandbox',text='Counts of Active SKUs diffed per manufacturer')
+
+f = open("difffile.txt", "w")
+f.write(print_payload)
+f.close()
+
+try:
+    filepath="./difffile.txt"
+    response = client.files_upload(
+        channels='#sandbox',
+        file=filepath)
+    assert response["file"]  # the uploaded file
+except SlackApiError as e:
+    # You will get a SlackApiError if "ok" is False
+    assert e.response["ok"] is False
+    assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
+    print(f"Got an error: {e.response['error']}")
