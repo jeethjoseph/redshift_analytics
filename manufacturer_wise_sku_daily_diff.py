@@ -68,7 +68,7 @@ print_payload = ""
 for manufacturer in sorteddiff:
     print_payload+=manufacturer + " : " + str(sorteddiff[manufacturer])+"\n"
 
-client.chat_postMessage(channel='#sandbox',text='Counts of Active SKUs diffed per manufacturer')
+client.chat_postMessage(channel='#coverage',text='Counts of Active SKUs diffed per manufacturer')
 
 f = open("difffile.txt", "w")
 f.write(print_payload)
@@ -77,7 +77,7 @@ f.close()
 try:
     filepath="./difffile.txt"
     response = client.files_upload(
-        channels='#sandbox',
+        channels='#coverage',
         file=filepath)
     assert response["file"]  # the uploaded file
 except SlackApiError as e:
